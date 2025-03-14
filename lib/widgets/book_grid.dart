@@ -1,27 +1,46 @@
 import 'package:flutter/material.dart';
 import '../models/book.dart';
-import '../utils/dummy_data.dart';
+import '../api/book.dart';
 
-class BookGrid extends StatelessWidget {
+class BookGrid extends StatefulWidget {
   const BookGrid({super.key});
 
   @override
+  State<BookGrid> createState() => _BookGridState();
+}
+
+class _BookGridState extends State<BookGrid> {
+  late Future<List<Book>> books;
+
+  @override
+  void initState() {
+    super.initState();
+    books = fetchBooks();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final books = DummyData.getBooks();
-    
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.65,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: books.length,
-      itemBuilder: (context, index) {
-        final book = books[index];
-        return _buildBookCard(book);
-      },
-    );
+    return FutureBuilder(
+        future: books,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.65,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final book = snapshot.data![index];
+                return _buildBookCard(book);
+              },
+            );
+          }
+
+          return const CircularProgressIndicator();
+    });
   }
 
   Widget _buildBookCard(Book book) {
