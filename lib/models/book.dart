@@ -14,5 +14,15 @@ class Book {
     required this.rating,
     this.progress = 0,
   });
+
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return Book(
+      id: json['id'],
+      title: json['title'],
+      author: json['author'],
+      coverUrl: json['coverUrl'],
+      rating: json['rating'],
+    );
+  }
 }
 
