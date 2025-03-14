@@ -20,7 +20,7 @@ class Book {
       id: json['id'],
       title: json['title'],
       author: json['author'],
-      coverUrl: json['coverUrl'],
+      coverUrl: json['image'],
       rating: json['rating'],
     );
   }
