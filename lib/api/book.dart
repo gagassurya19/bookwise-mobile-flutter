@@ -9,6 +9,6 @@ const apiURL = "https://bookwise.azurewebsites.net";
 
 Future<List<Book>> fetchBooks() async {
   final response = await http.get(Uri.parse('$apiURL/api/books'));
-  final data = jsonDecode(response.body) as List<Map<String, dynamic>>;
+  final data = jsonDecode(response.body) as List<dynamic>;
   return data.map((book) => Book.fromJson(book)).toList();
 }
