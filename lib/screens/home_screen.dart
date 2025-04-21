@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/avatar_row.dart';
 import '../widgets/rating_display.dart';
-import '../utils/constants.dart';
+// import '../utils/constants.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15),
-                
+
                 // Subtitle
                 Text(
                   'Masuk atau daftar untuk mulai menjelajahi dunia!',
@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Button
                 SizedBox(
                   width: 200,
@@ -58,16 +58,16 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Avatar row
                 const AvatarRow(),
                 const SizedBox(height: 20),
-                
+
                 // Rating
                 const RatingDisplay(rating: 5.0, reviewCount: '200+'),
-                
+
                 const SizedBox(height: 60),
-                
+
                 // Lightbulb icon
                 Icon(
                   Icons.lightbulb_outline,
@@ -82,4 +82,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'screens/explore_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +34,7 @@ class BookHomePage extends StatefulWidget {
 
 class _BookHomePageState extends State<BookHomePage> {
   int _selectedIndex = 0;
-  
+
   // List of screens to display based on selected index
   final List<Widget> _screens = [
     const HomeScreen(),
@@ -87,10 +88,9 @@ class _BookHomePageState extends State<BookHomePage> {
                         decoration: InputDecoration(
                           hintText: 'Search your book here...',
                           hintStyle: TextStyle(
-                            color: Colors.grey.shade400, 
-                            fontSize: 14, 
-                            fontWeight: FontWeight.w500
-                          ),
+                              color: Colors.grey.shade400,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
                           border: InputBorder.none,
                         ),
                       ),
@@ -284,7 +284,7 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15),
-                
+
                 // Subtitle
                 Text(
                   'Masuk atau daftar untuk mulai menjelajahi dunia!',
@@ -295,12 +295,19 @@ class HomeScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Button
                 SizedBox(
                   width: 200,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
@@ -316,20 +323,21 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Avatar row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) => _buildAvatar(index)),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Rating
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     for (int i = 0; i < 5; i++)
-                      const Icon(Icons.star, color: Color(0xFFFFD700), size: 24),
+                      const Icon(Icons.star,
+                          color: Color(0xFFFFD700), size: 24),
                     const SizedBox(width: 8),
                     const Text(
                       '5.0',
@@ -341,7 +349,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 5),
-                
+
                 // Reviews count
                 Text(
                   'from 200+ reviews',
@@ -350,9 +358,9 @@ class HomeScreen extends StatelessWidget {
                     color: Colors.grey.shade600,
                   ),
                 ),
-                
+
                 const SizedBox(height: 60),
-                
+
                 // Lightbulb icon
                 Icon(
                   Icons.lightbulb_outline,
@@ -391,8 +399,8 @@ class HomeScreen extends StatelessWidget {
             return Center(
               child: CircularProgressIndicator(
                 value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / 
-                      loadingProgress.expectedTotalBytes!
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
                     : null,
                 strokeWidth: 2,
               ),
@@ -426,7 +434,7 @@ class CollectionScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Tab bar
               Container(
                 decoration: BoxDecoration(
@@ -447,7 +455,7 @@ class CollectionScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Tab content
               const Expanded(
                 child: TabBarView(
@@ -475,19 +483,21 @@ class _ReadingBooksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Sample data
-    final books = isCurrentlyReading 
+    final books = isCurrentlyReading
         ? [
             {
               'title': 'Atomic Habits',
               'author': 'James Clear',
-              'coverUrl': 'https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg',
+              'coverUrl':
+                  'https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg',
               'rating': 4.8,
               'progress': 65,
             },
             {
               'title': 'The Psychology of Money',
               'author': 'Morgan Housel',
-              'coverUrl': 'https://m.media-amazon.com/images/I/71J3+5lrCDL._AC_UF1000,1000_QL80_.jpg',
+              'coverUrl':
+                  'https://m.media-amazon.com/images/I/71J3+5lrCDL._AC_UF1000,1000_QL80_.jpg',
               'rating': 4.6,
               'progress': 30,
             },
@@ -496,7 +506,8 @@ class _ReadingBooksList extends StatelessWidget {
             {
               'title': 'Sapiens: A Brief History of Humankind',
               'author': 'Yuval Noah Harari',
-              'coverUrl': 'https://m.media-amazon.com/images/I/713jIoMO3UL._AC_UF1000,1000_QL80_.jpg',
+              'coverUrl':
+                  'https://m.media-amazon.com/images/I/713jIoMO3UL._AC_UF1000,1000_QL80_.jpg',
               'rating': 4.7,
               'progress': 100,
             },
@@ -508,20 +519,22 @@ class _ReadingBooksList extends StatelessWidget {
               'progress': 100,
             },
           ];
-    
+
     if (books.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isCurrentlyReading ? Icons.book_outlined : Icons.check_circle_outline,
+              isCurrentlyReading
+                  ? Icons.book_outlined
+                  : Icons.check_circle_outline,
               size: 60,
               color: Colors.grey.shade400,
             ),
             const SizedBox(height: 16),
             Text(
-              isCurrentlyReading 
+              isCurrentlyReading
                   ? 'Belum ada buku yang sedang dibaca'
                   : 'Belum ada buku yang selesai dibaca',
               style: TextStyle(
@@ -534,7 +547,7 @@ class _ReadingBooksList extends StatelessWidget {
         ),
       );
     }
-    
+
     return ListView.builder(
       itemCount: books.length,
       itemBuilder: (context, index) {
@@ -557,7 +570,8 @@ class _ReadingBooksList extends StatelessWidget {
             children: [
               // Book cover
               ClipRRect(
-                borderRadius: const BorderRadius.horizontal(left: Radius.circular(12)),
+                borderRadius:
+                    const BorderRadius.horizontal(left: Radius.circular(12)),
                 child: Image.network(
                   book['coverUrl'] as String,
                   height: 120,
@@ -599,7 +613,8 @@ class _ReadingBooksList extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.star, color: Color(0xFFFFD700), size: 16),
+                          const Icon(Icons.star,
+                              color: Color(0xFFFFD700), size: 16),
                           const SizedBox(width: 4),
                           Text(
                             (book['rating'] as double).toString(),
@@ -624,7 +639,8 @@ class _ReadingBooksList extends StatelessWidget {
                         LinearProgressIndicator(
                           value: (book['progress'] as int) / 100,
                           backgroundColor: Colors.grey.shade200,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(Colors.black),
                         ),
                       ],
                     ],
@@ -653,7 +669,7 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              
+
               // Profile picture
               Container(
                 width: 100,
@@ -676,7 +692,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Name
               const Text(
                 'John Doe',
@@ -686,7 +702,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              
+
               // Email
               Text(
                 'john.doe@example.com',
@@ -696,7 +712,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Stats row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -707,7 +723,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Settings section
               _buildSettingsSection(context),
             ],
@@ -803,4 +819,3 @@ class _StatsCard extends StatelessWidget {
     );
   }
 }
-
