@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = true;
     });
-    
+
     // Simulate network delay
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
@@ -41,9 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _navigateToSignUp() {
     // Navigate to sign up page
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(builder: (_) => const SignUpScreen()),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
   }
 
   @override
@@ -83,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Email Field
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,15 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: 'contoh@email.com',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.black, width: 1.5),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 1.5),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -120,9 +127,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Password Field
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,15 +148,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: '••••••••',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.black, width: 1.5),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 1.5),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -159,9 +169,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Login Button
                       SizedBox(
                         width: double.infinity,
@@ -194,9 +204,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Sign Up Link
                       Center(
                         child: TextButton(
