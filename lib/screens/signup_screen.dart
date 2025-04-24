@@ -41,7 +41,8 @@ class _SignupScreenState extends State<SignupScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    final url = Uri.parse('https://book-wise.guelo.xyz/api/users/register/student');
+    final url =
+        Uri.parse('https://book-wise.guelo.xyz/api/users/register/student');
 
     final body = jsonEncode({
       "name": name,
@@ -160,7 +161,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 24),
 
                       // Name Field
-                      _buildTextField('Nama Lengkap', 'Masukkan nama lengkap', _nameController),
+                      _buildTextField('Nama Lengkap', 'Masukkan nama lengkap',
+                          _nameController),
 
                       const SizedBox(height: 16),
 
@@ -170,22 +172,28 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 16),
 
                       // Year Field
-                      _buildTextField('Tahun Masuk', 'Masukkan tahun masuk', _yearController),
+                      _buildTextField('Tahun Masuk', 'Masukkan tahun masuk',
+                          _yearController),
 
                       const SizedBox(height: 16),
 
                       // Phone Number Field
-                      _buildTextField('Nomor Telepon', 'Masukkan nomor telepon', _phoneController),
+                      _buildTextField('Nomor Telepon', 'Masukkan nomor telepon',
+                          _phoneController),
 
                       const SizedBox(height: 16),
 
                       // Email Field
-                      _buildTextField('Email', 'contoh@email.com', _emailController, keyboardType: TextInputType.emailAddress),
+                      _buildTextField(
+                          'Email', 'contoh@email.com', _emailController,
+                          keyboardType: TextInputType.emailAddress),
 
                       const SizedBox(height: 16),
 
                       // Password Field
-                      _buildTextField('Password', '••••••••', _passwordController, obscureText: true),
+                      _buildTextField(
+                          'Password', '••••••••', _passwordController,
+                          obscureText: true),
 
                       const SizedBox(height: 24),
 
@@ -250,8 +258,10 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildTextField(String label, String hint, TextEditingController controller,
-      {bool obscureText = false, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+      String label, String hint, TextEditingController controller,
+      {bool obscureText = false,
+      TextInputType keyboardType = TextInputType.text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
