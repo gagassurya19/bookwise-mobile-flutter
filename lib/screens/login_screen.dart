@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
+}
+
+// test login mahasiswa@student.com : mahasiswa123
+
+Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+  final url = Uri.parse(
+      'https://book-wise.guelo.xyz/api/auth/login'); // Ganti dengan URL aslinya
+
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'email': email,
+      'password': password,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    print('Login gagal: ${response.statusCode}');
+    print(response.body);
+    return null;
+  }
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -20,24 +49,53 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    // Implement your login logic here
+  void _handleLogin() async {
     setState(() {
       _isLoading = true;
     });
 
-    // Simulate network delay
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        // Navigate to main page after successful login
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (_) => const MainPage()),
-        // );
-      }
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    final response = await loginUser(email, password);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
     });
+
+    if (response != null && response['token'] != null) {
+      final token = response['token'];
+      print('Login berhasil. Token: $token');
+
+      // Tampilkan popup sukses tanpa interaksi
+      showDialog(
+        context: context,
+        barrierDismissible:
+            false, // Mencegah dialog ditutup dengan klik di luar
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.of(context).pop(); // Tutup dialog setelah 2 detik
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => const BookHomePage(initialIndex: 1),
+              ),
+            );
+          });
+          return AlertDialog(
+            title: const Text('Berhasil'),
+            content: const Text('Login berhasil!'),
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login gagal. Cek kembali email & password'),
+        ),
+      );
+    }
   }
 
   void _navigateToSignUp() {

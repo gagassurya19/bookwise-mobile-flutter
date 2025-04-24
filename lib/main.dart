@@ -26,14 +26,22 @@ class MyApp extends StatelessWidget {
 }
 
 class BookHomePage extends StatefulWidget {
-  const BookHomePage({super.key});
+  final int initialIndex;
+
+  const BookHomePage({super.key, this.initialIndex = 0});
 
   @override
   State<BookHomePage> createState() => _BookHomePageState();
 }
 
 class _BookHomePageState extends State<BookHomePage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   // List of screens to display based on selected index
   final List<Widget> _screens = [
