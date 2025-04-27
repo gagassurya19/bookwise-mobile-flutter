@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import '../widgets/book_grid.dart';
 
-class ExploreScreen extends StatelessWidget {
+class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
+
+  @override
+  State<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  String searchQuery = '';
+  String selectedCategory = 'Semua';
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +38,23 @@ class ExploreScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
+              // Search bar
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Cari buku...',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
               // Categories
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -41,34 +66,31 @@ class ExploreScreen extends StatelessWidget {
                     'Pendidikan',
                     'Bisnis',
                     'Teknologi',
-                  ].map((category) => _buildCategoryChip(category)).toList(),
+                  ].map((category) => ChoiceChip(
+                    label: Text(category),
+                    selected: selectedCategory == category,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                      }
+                    },
+                  )).toList(),
                 ),
               ),
               const SizedBox(height: 20),
 
               // Book grid
-              const Expanded(
-                child: BookGrid(),
+              Expanded(
+                child: BookGrid(
+                  searchQuery: searchQuery,
+                  filterCategory: selectedCategory,
+                ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryChip(String label) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: Chip(
-        label: Text(label),
-        backgroundColor: label == 'Semua' ? Colors.black : Colors.grey.shade200,
-        labelStyle: TextStyle(
-          color: label == 'Semua' ? Colors.white : Colors.black,
-          fontSize: 12,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
   }

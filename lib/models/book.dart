@@ -5,6 +5,7 @@ class Book {
   final String coverUrl;
   final double rating;
   final int progress; // 0-100 percentage
+  final String category;
 
   Book({
     required this.id,
@@ -13,6 +14,7 @@ class Book {
     required this.coverUrl,
     required this.rating,
     this.progress = 0,
+    required this.category,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class Book {
       author: json['author'],
       coverUrl: json['image'],
       rating: json['rating'],
+      category: json['category'],
     );
   }
 }

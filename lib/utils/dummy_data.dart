@@ -10,6 +10,7 @@ class DummyData {
         author: 'James Clear',
         coverUrl: 'https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.8,
+        category: 'Self-Help',
       ),
       Book(
         id: '2',
@@ -17,6 +18,7 @@ class DummyData {
         author: 'Yuval Noah Harari',
         coverUrl: 'https://m.media-amazon.com/images/I/713jIoMO3UL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.7,
+        category: 'History',
       ),
       Book(
         id: '3',
@@ -24,6 +26,7 @@ class DummyData {
         author: 'Morgan Housel',
         coverUrl: 'https://m.media-amazon.com/images/I/71J3+5lrCDL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.6,
+        category: 'Finance',
       ),
       Book(
         id: '4',
@@ -31,6 +34,7 @@ class DummyData {
         author: 'Tara Westover',
         coverUrl: 'https://m.media-amazon.com/images/I/81NwOj14S6L._AC_UF1000,1000_QL80_.jpg',
         rating: 4.7,
+        category: 'Memoir',
       ),
       Book(
         id: '5',
@@ -38,6 +42,7 @@ class DummyData {
         author: 'Paulo Coelho',
         coverUrl: 'https://m.media-amazon.com/images/I/51Z0nLAfLmL.jpg',
         rating: 4.7,
+        category: 'Fiction',
       ),
       Book(
         id: '6',
@@ -45,6 +50,7 @@ class DummyData {
         author: 'Daniel Kahneman',
         coverUrl: 'https://m.media-amazon.com/images/I/61fdrEuPJwL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.6,
+        category: 'Psychology',
       ),
     ];
   }
@@ -58,6 +64,7 @@ class DummyData {
         coverUrl: 'https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.8,
         progress: 65,
+        category: 'Self-Help',
       ),
       Book(
         id: '3',
@@ -66,6 +73,7 @@ class DummyData {
         coverUrl: 'https://m.media-amazon.com/images/I/71J3+5lrCDL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.6,
         progress: 30,
+        category: 'Finance',
       ),
     ];
   }
@@ -79,6 +87,7 @@ class DummyData {
         coverUrl: 'https://m.media-amazon.com/images/I/713jIoMO3UL._AC_UF1000,1000_QL80_.jpg',
         rating: 4.7,
         progress: 100,
+        category: 'History',
       ),
       Book(
         id: '5',
@@ -87,6 +96,7 @@ class DummyData {
         coverUrl: 'https://m.media-amazon.com/images/I/51Z0nLAfLmL.jpg',
         rating: 4.7,
         progress: 100,
+        category: 'Fiction',
       ),
     ];
   }
