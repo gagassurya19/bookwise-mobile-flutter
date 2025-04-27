@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 
 import 'screens/explore_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/welcome_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,14 +16,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bookwise App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const BookHomePage(),
-    );
+        title: 'Bookwise App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        // home: const BookHomePage(),
+        home: const WelcomeScreen());
   }
 }
 
@@ -269,156 +271,156 @@ class AppDrawer extends StatelessWidget {
 }
 
 // Home Screen
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+// class HomeScreen extends StatelessWidget {
+//   const HomeScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Welcome text
-                const Text(
-                  'Book Wise',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 15),
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Center(
+//         child: SingleChildScrollView(
+//           child: Padding(
+//             padding: const EdgeInsets.all(20.0),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 // Welcome text
+//                 const Text(
+//                   'Book Wise',
+//                   style: TextStyle(
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 const SizedBox(height: 15),
 
-                // Subtitle
-                Text(
-                  'Masuk atau daftar untuk mulai menjelajahi dunia!',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
+//                 // Subtitle
+//                 Text(
+//                   'Masuk atau daftar untuk mulai menjelajahi dunia!',
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.grey.shade600,
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 const SizedBox(height: 30),
 
-                // Button
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Masuk / Daftar',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
+//                 // Button
+//                 SizedBox(
+//                   width: 200,
+//                   child: ElevatedButton(
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => const LoginScreen(),
+//                         ),
+//                       );
+//                     },
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.black,
+//                       foregroundColor: Colors.white,
+//                       padding: const EdgeInsets.symmetric(vertical: 15),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(8),
+//                       ),
+//                     ),
+//                     child: const Text(
+//                       'Masuk / Daftar',
+//                       style: TextStyle(fontSize: 16),
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 40),
 
-                // Avatar row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) => _buildAvatar(index)),
-                ),
-                const SizedBox(height: 20),
+//                 // Avatar row
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: List.generate(5, (index) => _buildAvatar(index)),
+//                 ),
+//                 const SizedBox(height: 20),
 
-                // Rating
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (int i = 0; i < 5; i++)
-                      const Icon(Icons.star,
-                          color: Color(0xFFFFD700), size: 24),
-                    const SizedBox(width: 8),
-                    const Text(
-                      '5.0',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
+//                 // Rating
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     for (int i = 0; i < 5; i++)
+//                       const Icon(Icons.star,
+//                           color: Color(0xFFFFD700), size: 24),
+//                     const SizedBox(width: 8),
+//                     const Text(
+//                       '5.0',
+//                       style: TextStyle(
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 5),
 
-                // Reviews count
-                Text(
-                  'from 200+ reviews',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
+//                 // Reviews count
+//                 Text(
+//                   'from 200+ reviews',
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.grey.shade600,
+//                   ),
+//                 ),
 
-                const SizedBox(height: 60),
+//                 const SizedBox(height: 60),
 
-                // Lightbulb icon
-                Icon(
-                  Icons.lightbulb_outline,
-                  size: 60,
-                  color: Colors.grey.shade800,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//                 // Lightbulb icon
+//                 Icon(
+//                   Icons.lightbulb_outline,
+//                   size: 60,
+//                   color: Colors.grey.shade800,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  Widget _buildAvatar(int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.grey.shade200, width: 2),
-      ),
-      child: ClipOval(
-        child: Image.network(
-          'https://www.shadcnblocks.com/images/block/avatar-${index + 1}.webp',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: Colors.grey.shade300,
-              child: const Icon(Icons.person, size: 25),
-            );
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                strokeWidth: 2,
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+//   Widget _buildAvatar(int index) {
+//     return Container(
+//       margin: const EdgeInsets.symmetric(horizontal: 4),
+//       width: 50,
+//       height: 50,
+//       decoration: BoxDecoration(
+//         shape: BoxShape.circle,
+//         border: Border.all(color: Colors.grey.shade200, width: 2),
+//       ),
+//       child: ClipOval(
+//         child: Image.network(
+//           'https://www.shadcnblocks.com/images/block/avatar-${index + 1}.webp',
+//           fit: BoxFit.cover,
+//           errorBuilder: (context, error, stackTrace) {
+//             return Container(
+//               color: Colors.grey.shade300,
+//               child: const Icon(Icons.person, size: 25),
+//             );
+//           },
+//           loadingBuilder: (context, child, loadingProgress) {
+//             if (loadingProgress == null) return child;
+//             return Center(
+//               child: CircularProgressIndicator(
+//                 value: loadingProgress.expectedTotalBytes != null
+//                     ? loadingProgress.cumulativeBytesLoaded /
+//                         loadingProgress.expectedTotalBytes!
+//                     : null,
+//                 strokeWidth: 2,
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // Collection Screen
 class CollectionScreen extends StatelessWidget {

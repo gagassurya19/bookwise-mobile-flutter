@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
@@ -79,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.of(context).pop(); // Tutup dialog setelah 2 detik
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (_) => const BookHomePage(initialIndex: 1),
+                builder: (_) => const BookHomePage(initialIndex: 0),
               ),
             );
           });
