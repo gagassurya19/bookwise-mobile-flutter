@@ -4,6 +4,7 @@ import 'home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -66,18 +67,17 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false;
     });
 
-    if (response != null && response['token'] != null) {
-      final token = response['token'];
-      print('Login berhasil. Token: $token');
+    if (response != null) {
+      // Set login status to true
+      await AuthService.setLoggedIn(true);
 
       // Tampilkan popup sukses tanpa interaksi
       showDialog(
         context: context,
-        barrierDismissible:
-            false, // Mencegah dialog ditutup dengan klik di luar
+        barrierDismissible: false,
         builder: (BuildContext context) {
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.of(context).pop(); // Tutup dialog setelah 2 detik
+            Navigator.of(context).pop();
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (_) => const BookHomePage(initialIndex: 0),

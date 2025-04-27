@@ -5,25 +5,63 @@ import 'screens/explore_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Bookwise App',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.white,
+      title: 'BookWise',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const AuthWrapper(),
+    );
+  }
+}
+
+class AuthWrapper extends StatefulWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  bool _isLoading = true;
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final isLoggedIn = await AuthService.isLoggedIn();
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
-        // home: const BookHomePage(),
-        home: const WelcomeScreen());
+      );
+    }
+
+    return _isLoggedIn ? const BookHomePage(initialIndex: 0) : const LoginScreen();
   }
 }
 
@@ -771,7 +809,18 @@ class ProfileScreen extends StatelessWidget {
             leading: Icon(item['icon'] as IconData, color: Colors.black),
             title: Text(item['title'] as String),
             trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-            onTap: () {},
+            onTap: () async {
+              if (item['title'] == 'Keluar') {
+                await AuthService.logout();
+                if (context.mounted) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginScreen(),
+                    ),
+                  );
+                }
+              }
+            },
           );
         }).toList(),
       ),
