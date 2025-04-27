@@ -3,7 +3,10 @@ import '../models/book.dart';
 import '../api/book.dart';
 
 class BookGrid extends StatefulWidget {
-  const BookGrid({super.key});
+  final String searchQuery;
+  final String filterCategory;
+
+  const BookGrid({super.key, this.searchQuery = '', this.filterCategory = 'Semua'});
 
   @override
   State<BookGrid> createState() => _BookGridState();
@@ -24,6 +27,12 @@ class _BookGridState extends State<BookGrid> {
         future: books,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            final filteredBooks = snapshot.data!.where((book) {
+              final matchesSearch = book.title.toLowerCase().contains(widget.searchQuery.toLowerCase());
+              final matchesCategory = widget.filterCategory == 'Semua' || book.category == widget.filterCategory;
+              return matchesSearch && matchesCategory;
+            }).toList();
+
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -31,9 +40,9 @@ class _BookGridState extends State<BookGrid> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: snapshot.data!.length,
+              itemCount: filteredBooks.length,
               itemBuilder: (context, index) {
-                final book = snapshot.data![index];
+                final book = filteredBooks[index];
                 return _buildBookCard(book);
               },
             );

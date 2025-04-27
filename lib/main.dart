@@ -6,6 +6,7 @@ import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
+import 'models/book.dart';
 
 void main() {
   runApp(const MyApp());
@@ -461,8 +462,16 @@ class AppDrawer extends StatelessWidget {
 // }
 
 // Collection Screen
-class CollectionScreen extends StatelessWidget {
+class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key});
+
+  @override
+  State<CollectionScreen> createState() => _CollectionScreenState();
+}
+
+class _CollectionScreenState extends State<CollectionScreen> {
+  // Tambahkan variabel untuk menyimpan kata kunci pencarian
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -474,6 +483,22 @@ class CollectionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // TextField untuk pencarian
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Cari buku...',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               const Text(
                 'Koleksi Saya',
                 style: TextStyle(
@@ -505,11 +530,11 @@ class CollectionScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Tab content
-              const Expanded(
+              Expanded(
                 child: TabBarView(
                   children: [
-                    _ReadingBooksList(isCurrentlyReading: true),
-                    _ReadingBooksList(isCurrentlyReading: false),
+                    _ReadingBooksList(isCurrentlyReading: true, searchQuery: _searchQuery, books: []),
+                    _ReadingBooksList(isCurrentlyReading: false, searchQuery: _searchQuery, books: []),
                   ],
                 ),
               ),
@@ -523,52 +548,24 @@ class CollectionScreen extends StatelessWidget {
 
 class _ReadingBooksList extends StatelessWidget {
   final bool isCurrentlyReading;
+  final String searchQuery;
+  final List<Book> books;
 
   const _ReadingBooksList({
     required this.isCurrentlyReading,
+    required this.searchQuery,
+    required this.books,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Sample data
-    final books = isCurrentlyReading
-        ? [
-            {
-              'title': 'Atomic Habits',
-              'author': 'James Clear',
-              'coverUrl':
-                  'https://m.media-amazon.com/images/I/81wgcld4wxL._AC_UF1000,1000_QL80_.jpg',
-              'rating': 4.8,
-              'progress': 65,
-            },
-            {
-              'title': 'The Psychology of Money',
-              'author': 'Morgan Housel',
-              'coverUrl':
-                  'https://m.media-amazon.com/images/I/71J3+5lrCDL._AC_UF1000,1000_QL80_.jpg',
-              'rating': 4.6,
-              'progress': 30,
-            },
-          ]
-        : [
-            {
-              'title': 'Sapiens: A Brief History of Humankind',
-              'author': 'Yuval Noah Harari',
-              'coverUrl':
-                  'https://m.media-amazon.com/images/I/713jIoMO3UL._AC_UF1000,1000_QL80_.jpg',
-              'rating': 4.7,
-              'progress': 100,
-            },
-            {
-              'title': 'The Alchemist',
-              'author': 'Paulo Coelho',
-              'coverUrl': 'https://m.media-amazon.com/images/I/51Z0nLAfLmL.jpg',
-              'rating': 4.7,
-              'progress': 100,
-            },
-          ];
+    // Filter buku berdasarkan searchQuery
+    final filteredBooks = books.where((book) {
+      final title = book.title?.toLowerCase() ?? '';
+      return title.contains(searchQuery.toLowerCase());
+    }).toList();
 
-    if (books.isEmpty) {
+    if (filteredBooks.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -597,9 +594,9 @@ class _ReadingBooksList extends StatelessWidget {
     }
 
     return ListView.builder(
-      itemCount: books.length,
+      itemCount: filteredBooks.length,
       itemBuilder: (context, index) {
-        final book = books[index];
+        final book = filteredBooks[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
@@ -621,7 +618,7 @@ class _ReadingBooksList extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(12)),
                 child: Image.network(
-                  book['coverUrl'] as String,
+                  book.coverUrl,
                   height: 120,
                   width: 80,
                   fit: BoxFit.cover,
@@ -642,7 +639,7 @@ class _ReadingBooksList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        book['title'] as String,
+                        book.title ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -652,7 +649,7 @@ class _ReadingBooksList extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        book['author'] as String,
+                        book.author,
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 14,
@@ -665,7 +662,7 @@ class _ReadingBooksList extends StatelessWidget {
                               color: Color(0xFFFFD700), size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            (book['rating'] as double).toString(),
+                            book.rating.toString(),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -674,7 +671,7 @@ class _ReadingBooksList extends StatelessWidget {
                           const Spacer(),
                           if (isCurrentlyReading)
                             Text(
-                              '${book['progress']}%',
+                              '${book.progress}%',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -685,7 +682,7 @@ class _ReadingBooksList extends StatelessWidget {
                       if (isCurrentlyReading) ...[
                         const SizedBox(height: 8),
                         LinearProgressIndicator(
-                          value: (book['progress'] as int) / 100,
+                          value: book.progress / 100,
                           backgroundColor: Colors.grey.shade200,
                           valueColor:
                               const AlwaysStoppedAnimation<Color>(Colors.black),
