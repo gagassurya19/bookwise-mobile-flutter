@@ -1,3 +1,4 @@
+import 'package:bookwise_app/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -6,6 +7,7 @@ import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
+import 'screens/transaction_screen.dart';
 import 'models/book.dart';
 
 void main() {
@@ -62,7 +64,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    return _isLoggedIn ? const BookHomePage(initialIndex: 0) : const LoginScreen();
+    return _isLoggedIn
+        ? const BookHomePage(initialIndex: 0)
+        : const LoginScreen();
   }
 }
 
@@ -88,7 +92,7 @@ class _BookHomePageState extends State<BookHomePage> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const ExploreScreen(),
-    const CollectionScreen(),
+    const TransactionScreen(),
     const ProfileScreen(),
   ];
 
@@ -214,7 +218,7 @@ class _BookHomePageState extends State<BookHomePage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.book_outlined),
               activeIcon: Icon(Icons.book),
-              label: 'Koleksi',
+              label: 'Transaksi',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
@@ -533,8 +537,14 @@ class _CollectionScreenState extends State<CollectionScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    _ReadingBooksList(isCurrentlyReading: true, searchQuery: _searchQuery, books: []),
-                    _ReadingBooksList(isCurrentlyReading: false, searchQuery: _searchQuery, books: []),
+                    _ReadingBooksList(
+                        isCurrentlyReading: true,
+                        searchQuery: _searchQuery,
+                        books: []),
+                    _ReadingBooksList(
+                        isCurrentlyReading: false,
+                        searchQuery: _searchQuery,
+                        books: []),
                   ],
                 ),
               ),

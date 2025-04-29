@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/stats_card.dart';
+import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userId'); // Hapus userId dari SharedPreferences
+
+    // Navigasi ke layar login
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              
+
               // Profile picture
               Container(
                 width: 100,
@@ -37,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Name
               const Text(
                 'John Doe',
@@ -47,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              
+
               // Email
               Text(
                 'john.doe@example.com',
@@ -57,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Stats row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Settings section
               _buildSettingsSection(context),
             ],
@@ -80,11 +94,15 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildSettingsSection(BuildContext context) {
     final settingsItems = [
-      {'icon': Icons.person_outline, 'title': 'Edit Profil'},
-      {'icon': Icons.notifications_none, 'title': 'Notifikasi'},
-      {'icon': Icons.security, 'title': 'Keamanan'},
-      {'icon': Icons.help_outline, 'title': 'Bantuan'},
-      {'icon': Icons.logout, 'title': 'Keluar'},
+      {'icon': Icons.person_outline, 'title': 'Edit Profil', 'onTap': () {}},
+      {'icon': Icons.notifications_none, 'title': 'Notifikasi', 'onTap': () {}},
+      {'icon': Icons.security, 'title': 'Keamanan', 'onTap': () {}},
+      {'icon': Icons.help_outline, 'title': 'Bantuan', 'onTap': () {}},
+      {
+        'icon': Icons.logout,
+        'title': 'Keluar',
+        'onTap': () => _logout(context), // Panggil fungsi logout
+      },
     ];
 
     return Container(
@@ -106,11 +124,10 @@ class ProfileScreen extends StatelessWidget {
             leading: Icon(item['icon'] as IconData, color: Colors.black),
             title: Text(item['title'] as String),
             trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-            onTap: () {},
+            onTap: item['onTap'] as void Function()?,
           );
         }).toList(),
       ),
     );
   }
 }
-

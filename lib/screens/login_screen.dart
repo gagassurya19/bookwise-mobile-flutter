@@ -1,3 +1,4 @@
+import 'package:bookwise_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
@@ -5,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
 import '../services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,27 +18,44 @@ class LoginScreen extends StatefulWidget {
 // test login mahasiswa@student.com : mahasiswa123
 
 Future<Map<String, dynamic>?> loginUser(String email, String password) async {
-  final url = Uri.parse(
-      'https://book-wise.guelo.xyz/api/auth/login'); // Ganti dengan URL aslinya
+  final url = Uri.parse('https://bookwise.azurewebsites.net/api/auth/login');
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
 
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'email': email,
-      'password': password,
-    }),
-  );
+    final userData = User.fromJson(jsonDecode(response.body));
 
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    print('Login gagal: ${response.statusCode}');
-    print(response.body);
+    print('TEST: ${userData}');
+
+    print('Status Code: ${response.statusCode}');
+    print('Response Bodyy: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      print('Decoded Response: $decodedResponse');
+      return decodedResponse;
+    } else {
+      print('Login gagal: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+      return null;
+    }
+  } catch (e) {
+    print('Error during login request: $e');
     return null;
   }
+}
+
+Future<String?> getUserId() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userId');
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -68,10 +87,18 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (response != null) {
-      // Set login status to true
+      print('Saving user data: ${response['id']}');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', response['id']);
+      await prefs.setString('name', response['name']);
+      await prefs.setString('email', response['email']);
+      await prefs.setString('token', response['token']);
+
+      print('User ID saved: ${prefs.getString('userId')}');
+
       await AuthService.setLoggedIn(true);
 
-      // Tampilkan popup sukses tanpa interaksi
       showDialog(
         context: context,
         barrierDismissible: false,
