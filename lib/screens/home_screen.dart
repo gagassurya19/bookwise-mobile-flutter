@@ -11,67 +11,55 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Map<String, List<Book>> booksByCategory = {};
-  bool isLoading = true;
-  String? error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      // Get books for each category
-      final Map<String, List<Book>> fetchedBooks = {};
-      for (final category in BookService.categories) {
-        final books = await BookService.getBooks(category: category);
-        fetchedBooks[category] = books;
-      }
-
-      setState(() {
-        booksByCategory = fetchedBooks;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 48),
-            const SizedBox(height: 16),
-            Text(
-              'Error: $error',
-              style: const TextStyle(color: Colors.red),
-              textAlign: TextAlign.center,
+    return FutureBuilder<Map<String, List<Book>>>(
+      future: _fetchBooks(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadData,
+                  child: const Text('Try Again'),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Try Again'),
-            ),
-          ],
-        ),
-      );
-    }
+          );
+        } else {
+          final booksByCategory = snapshot.data!;
+          return _buildContent(booksByCategory);
+        }
+      },
+    );
+  }
 
+  void _loadData() {
+    setState(() {});
+  }
+
+  Future<Map<String, List<Book>>> _fetchBooks() async {
+    final Map<String, List<Book>> fetchedBooks = {};
+    for (final category in BookService.categories) {
+      final books = await BookService.getBooks(category: category);
+      fetchedBooks[category] = books;
+    }
+    return fetchedBooks;
+  }
+
+  Widget _buildContent(Map<String, List<Book>> booksByCategory) {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
