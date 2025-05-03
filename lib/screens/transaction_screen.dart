@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/api_service.dart';
 import '../models/transaction_model.dart';
+import '../screens/invoice_detail_screen.dart';
 
 class TransactionScreen extends StatelessWidget {
   const TransactionScreen({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class TransactionScreen extends StatelessWidget {
                     itemCount: transactions.length,
                     itemBuilder: (context, index) {
                       final transaction = transactions[index];
-                      return _buildTransactionCard(transaction);
+                      return _buildTransactionCard(context, transaction);
                     },
                   );
                 }
@@ -63,7 +64,7 @@ class TransactionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionCard(Transaction transaction) {
+  Widget _buildTransactionCard(BuildContext context, Transaction transaction) {
     final dateFormat = DateFormat('dd/MM/yyyy');
     final startDate = dateFormat.format(DateTime.parse(transaction.dateStart));
     final endDate = dateFormat.format(DateTime.parse(transaction.dateEnd));
@@ -86,13 +87,33 @@ class TransactionScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Invoice Code
-          Text(
-            'Rp ${transaction.totalFee.toStringAsFixed(0)}',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
+          // Invoice Code and Type
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                transaction.invoiceCode,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: transaction.type == 'BORROW' ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  transaction.type,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: transaction.type == 'BORROW' ? Colors.blue : Colors.orange,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           // Date Range
@@ -126,6 +147,38 @@ class TransactionScreen extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          // View Details Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InvoiceDetailScreen(
+                      invoiceCode: transaction.invoiceCode,
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'View Details',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ],
       ),

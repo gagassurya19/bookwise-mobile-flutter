@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/transaction_model.dart';
+import '../models/invoice_model.dart';
 
 class ApiService {
   static const String baseUrl = 'https://bookwise.azurewebsites.net';
@@ -24,6 +25,21 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error fetching transactions: $e');
+    }
+  }
+
+  static Future<Invoice> fetchInvoiceDetails(String invoiceCode) async {
+    final response = await http.get(
+      Uri.parse('https://bookwise.azurewebsites.net/api/transactions/invoice?invoiceCode=$invoiceCode'),
+      headers: {
+        'accept': '*/*',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Invoice.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load invoice details');
     }
   }
 }

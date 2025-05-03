@@ -234,6 +234,11 @@ class _BookHomePageState extends State<BookHomePage> {
               label: 'Jelajahi',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_outlined),
+              activeIcon: Icon(Icons.shopping_cart),
+              label: 'Keranjang',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.book_outlined),
               activeIcon: Icon(Icons.book),
               label: 'Transaksi',
