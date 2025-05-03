@@ -9,6 +9,7 @@ import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
 import 'screens/transaction_screen.dart';
 import 'models/book.dart';
+import 'screens/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,8 +73,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
 class BookHomePage extends StatefulWidget {
   final int initialIndex;
+  final String? searchQuery;
 
-  const BookHomePage({super.key, this.initialIndex = 0});
+  const BookHomePage({super.key, this.initialIndex = 0, this.searchQuery});
 
   @override
   State<BookHomePage> createState() => _BookHomePageState();
@@ -81,24 +83,29 @@ class BookHomePage extends StatefulWidget {
 
 class _BookHomePageState extends State<BookHomePage> {
   late int _selectedIndex;
+  String? _searchQuery;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+    _searchQuery = widget.searchQuery;
   }
 
   // List of screens to display based on selected index
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const ExploreScreen(),
-    const TransactionScreen(),
-    const ProfileScreen(),
-  ];
+  List<Widget> get _screens => [
+        const HomeScreen(),
+        ExploreScreen(searchQuery: _searchQuery),
+        const TransactionScreen(),
+        const ProfileScreen(),
+      ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index != 1) {
+        _searchQuery = null;
+      }
     });
   }
 
@@ -106,7 +113,7 @@ class _BookHomePageState extends State<BookHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: const AppDrawer(),
-      appBar: AppBar(
+      appBar: _selectedIndex == 1 || _selectedIndex == 2 ? null : AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -146,6 +153,12 @@ class _BookHomePageState extends State<BookHomePage> {
                               fontWeight: FontWeight.w500),
                           border: InputBorder.none,
                         ),
+                        onSubmitted: (value) {
+                          setState(() {
+                            _searchQuery = value;
+                            _selectedIndex = 1;
+                          });
+                        },
                       ),
                     ),
                     IconButton(
@@ -309,579 +322,6 @@ class AppDrawer extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-    );
-  }
-}
-
-// Home Screen
-// class HomeScreen extends StatelessWidget {
-//   const HomeScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Center(
-//         child: SingleChildScrollView(
-//           child: Padding(
-//             padding: const EdgeInsets.all(20.0),
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 // Welcome text
-//                 const Text(
-//                   'Book Wise',
-//                   style: TextStyle(
-//                     fontSize: 28,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                   textAlign: TextAlign.center,
-//                 ),
-//                 const SizedBox(height: 15),
-
-//                 // Subtitle
-//                 Text(
-//                   'Masuk atau daftar untuk mulai menjelajahi dunia!',
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     color: Colors.grey.shade600,
-//                   ),
-//                   textAlign: TextAlign.center,
-//                 ),
-//                 const SizedBox(height: 30),
-
-//                 // Button
-//                 SizedBox(
-//                   width: 200,
-//                   child: ElevatedButton(
-//                     onPressed: () {
-//                       Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                           builder: (context) => const LoginScreen(),
-//                         ),
-//                       );
-//                     },
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Colors.black,
-//                       foregroundColor: Colors.white,
-//                       padding: const EdgeInsets.symmetric(vertical: 15),
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(8),
-//                       ),
-//                     ),
-//                     child: const Text(
-//                       'Masuk / Daftar',
-//                       style: TextStyle(fontSize: 16),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 40),
-
-//                 // Avatar row
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: List.generate(5, (index) => _buildAvatar(index)),
-//                 ),
-//                 const SizedBox(height: 20),
-
-//                 // Rating
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     for (int i = 0; i < 5; i++)
-//                       const Icon(Icons.star,
-//                           color: Color(0xFFFFD700), size: 24),
-//                     const SizedBox(width: 8),
-//                     const Text(
-//                       '5.0',
-//                       style: TextStyle(
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//                 const SizedBox(height: 5),
-
-//                 // Reviews count
-//                 Text(
-//                   'from 200+ reviews',
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     color: Colors.grey.shade600,
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 60),
-
-//                 // Lightbulb icon
-//                 Icon(
-//                   Icons.lightbulb_outline,
-//                   size: 60,
-//                   color: Colors.grey.shade800,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildAvatar(int index) {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 4),
-//       width: 50,
-//       height: 50,
-//       decoration: BoxDecoration(
-//         shape: BoxShape.circle,
-//         border: Border.all(color: Colors.grey.shade200, width: 2),
-//       ),
-//       child: ClipOval(
-//         child: Image.network(
-//           'https://www.shadcnblocks.com/images/block/avatar-${index + 1}.webp',
-//           fit: BoxFit.cover,
-//           errorBuilder: (context, error, stackTrace) {
-//             return Container(
-//               color: Colors.grey.shade300,
-//               child: const Icon(Icons.person, size: 25),
-//             );
-//           },
-//           loadingBuilder: (context, child, loadingProgress) {
-//             if (loadingProgress == null) return child;
-//             return Center(
-//               child: CircularProgressIndicator(
-//                 value: loadingProgress.expectedTotalBytes != null
-//                     ? loadingProgress.cumulativeBytesLoaded /
-//                         loadingProgress.expectedTotalBytes!
-//                     : null,
-//                 strokeWidth: 2,
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// Collection Screen
-class CollectionScreen extends StatefulWidget {
-  const CollectionScreen({super.key});
-
-  @override
-  State<CollectionScreen> createState() => _CollectionScreenState();
-}
-
-class _CollectionScreenState extends State<CollectionScreen> {
-  // Tambahkan variabel untuk menyimpan kata kunci pencarian
-  String _searchQuery = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // TextField untuk pencarian
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value.toLowerCase();
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Cari buku...',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Koleksi Saya',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Tab bar
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TabBar(
-                  indicator: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
-                  tabs: const [
-                    Tab(text: 'Sedang Dibaca'),
-                    Tab(text: 'Selesai'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Tab content
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    _ReadingBooksList(
-                        isCurrentlyReading: true,
-                        searchQuery: _searchQuery,
-                        books: []),
-                    _ReadingBooksList(
-                        isCurrentlyReading: false,
-                        searchQuery: _searchQuery,
-                        books: []),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ReadingBooksList extends StatelessWidget {
-  final bool isCurrentlyReading;
-  final String searchQuery;
-  final List<Book> books;
-
-  const _ReadingBooksList({
-    required this.isCurrentlyReading,
-    required this.searchQuery,
-    required this.books,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Filter buku berdasarkan searchQuery
-    final filteredBooks = books.where((book) {
-      final title = book.title?.toLowerCase() ?? '';
-      return title.contains(searchQuery.toLowerCase());
-    }).toList();
-
-    if (filteredBooks.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isCurrentlyReading
-                  ? Icons.book_outlined
-                  : Icons.check_circle_outline,
-              size: 60,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              isCurrentlyReading
-                  ? 'Belum ada buku yang sedang dibaca'
-                  : 'Belum ada buku yang selesai dibaca',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: filteredBooks.length,
-      itemBuilder: (context, index) {
-        final book = filteredBooks[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Book cover
-              ClipRRect(
-                borderRadius:
-                    const BorderRadius.horizontal(left: Radius.circular(12)),
-                child: Image.network(
-                  book.coverUrl,
-                  height: 120,
-                  width: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 120,
-                      width: 80,
-                      color: Colors.grey.shade300,
-                      child: const Icon(Icons.book, size: 30),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        book.title ?? '',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        book.author,
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.star,
-                              color: Color(0xFFFFD700), size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            book.rating.toString(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Spacer(),
-                          if (isCurrentlyReading)
-                            Text(
-                              '${book.progress}%',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                        ],
-                      ),
-                      if (isCurrentlyReading) ...[
-                        const SizedBox(height: 8),
-                        LinearProgressIndicator(
-                          value: book.progress / 100,
-                          backgroundColor: Colors.grey.shade200,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(Colors.black),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-// Profile Screen
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-
-              // Profile picture
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade200, width: 2),
-                ),
-                child: ClipOval(
-                  child: Image.network(
-                    'https://www.shadcnblocks.com/images/block/avatar-1.webp',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.person, size: 50),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Name
-              const Text(
-                'John Doe',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-
-              // Email
-              Text(
-                'john.doe@example.com',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Stats row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  _StatsCard(title: 'Buku Dibaca', value: '27'),
-                  _StatsCard(title: 'Ulasan', value: '15'),
-                  _StatsCard(title: 'Favorit', value: '8'),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Settings section
-              _buildSettingsSection(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSettingsSection(BuildContext context) {
-    final settingsItems = [
-      {'icon': Icons.person_outline, 'title': 'Edit Profil'},
-      {'icon': Icons.notifications_none, 'title': 'Notifikasi'},
-      {'icon': Icons.security, 'title': 'Keamanan'},
-      {'icon': Icons.help_outline, 'title': 'Bantuan'},
-      {'icon': Icons.logout, 'title': 'Keluar'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: settingsItems.map((item) {
-          return ListTile(
-            leading: Icon(item['icon'] as IconData, color: Colors.black),
-            title: Text(item['title'] as String),
-            trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-            onTap: () async {
-              if (item['title'] == 'Keluar') {
-                await AuthService.logout();
-                if (context.mounted) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (_) => const LoginScreen(),
-                    ),
-                  );
-                }
-              }
-            },
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _StatsCard extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const _StatsCard({
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 }
