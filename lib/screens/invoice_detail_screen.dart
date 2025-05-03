@@ -31,51 +31,9 @@ class InvoiceDetailScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 48,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Error: ${snapshot.error}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.receipt_long,
-                    color: Colors.grey,
-                    size: 48,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'No invoice data available',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return const Center(child: Text('No invoice data available'));
           }
 
           final invoice = snapshot.data!;
@@ -132,6 +90,7 @@ class InvoiceDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
+                          const SizedBox(width: 16),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
@@ -262,24 +221,31 @@ class InvoiceDetailScreen extends StatelessWidget {
                                   color: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.image_not_supported,
-                                        color: Colors.grey,
-                                        size: 32,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.image_not_supported,
+                                      size: 48,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Unable to load image',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
                                       ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Image not available',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'URL: ${invoice.paymentEvidence}',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontSize: 12,
                                       ),
-                                    ],
-                                  ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -292,8 +258,13 @@ class InvoiceDetailScreen extends StatelessWidget {
                                   color: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
                                 ),
                               );
                             },
@@ -334,7 +305,6 @@ class InvoiceDetailScreen extends StatelessWidget {
                       ...invoice.items.map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
@@ -343,36 +313,6 @@ class InvoiceDetailScreen extends StatelessWidget {
                                     width: 80,
                                     height: 120,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        width: 80,
-                                        height: 120,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.image_not_supported,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Container(
-                                        width: 80,
-                                        height: 120,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      );
-                                    },
                                   ),
                                 ),
                                 const SizedBox(width: 16),
@@ -386,8 +326,6 @@ class InvoiceDetailScreen extends StatelessWidget {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
@@ -395,8 +333,6 @@ class InvoiceDetailScreen extends StatelessWidget {
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       if (item.lateFee > 0) ...[
                                         const SizedBox(height: 8),
@@ -468,7 +404,6 @@ class InvoiceDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
               ],
             ),
           );

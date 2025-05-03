@@ -19,7 +19,16 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Transaction.fromJson(json)).toList();
+        final transactions = data.map((json) => Transaction.fromJson(json)).toList();
+        
+        // Sort transactions by date in descending order (newest first)
+        transactions.sort((a, b) {
+          final dateA = DateTime.parse(a.dateStart);
+          final dateB = DateTime.parse(b.dateStart);
+          return dateB.compareTo(dateA);
+        });
+        
+        return transactions;
       } else {
         throw Exception('Failed to load transactions: ${response.statusCode}');
       }
@@ -41,5 +50,18 @@ class ApiService {
     } else {
       throw Exception('Failed to load invoice details');
     }
+  }
+
+  static Future<http.Response> createTransaction(Map<String, dynamic> data) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/transactions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    return response;
   }
 }

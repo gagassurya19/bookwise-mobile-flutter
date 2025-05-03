@@ -3,6 +3,9 @@ import '../models/book_detail.dart';
 import '../models/book_review.dart';
 import '../services/book_service.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
+import '../models/cart_item.dart'; // Ensure CartItem is imported
 
 class BookDetailScreen extends StatefulWidget {
   final String bookId;
@@ -232,14 +235,30 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: isAvailable && book.canBorrow ? () {} : null,
+                  onPressed: isAvailable && book.canBorrow ? () {
+                    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+                    cartProvider.addItem(
+                      CartItem(
+                        id: book.id,
+                        title: book.title,
+                        image: book.image,
+                        author: book.author,
+                        lateFee: book.lateFee,
+                        dateFrom: DateTime.now(),
+                        dateTo: DateTime.now().add(const Duration(days: 7)),
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Book added to cart')),
+                    );
+                  } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                     textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text('Borrow Book'),
+                  child: const Text('Add to Cart'),
                 ),
               ),
             ),

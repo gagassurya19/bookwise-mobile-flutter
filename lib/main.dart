@@ -1,6 +1,7 @@
 import 'package:bookwise_app/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/explore_screen.dart';
 import 'screens/login_screen.dart';
@@ -12,6 +13,9 @@ import 'models/book.dart';
 import 'screens/profile_screen.dart';
 import 'models/notification.dart';
 import 'services/notification_service.dart';
+import 'providers/cart_provider.dart';
+import 'screens/cart_screen.dart';
+import 'providers/navigation_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,12 +26,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BookWise',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: MaterialApp(
+        title: 'BookWise',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const AuthWrapper(),
       ),
-      home: const AuthWrapper(),
     );
   }
 }
@@ -98,6 +108,7 @@ class _BookHomePageState extends State<BookHomePage> {
   List<Widget> get _screens => [
         const HomeScreen(),
         ExploreScreen(searchQuery: _searchQuery),
+        const CartScreen(),
         const TransactionScreen(),
         const ProfileScreen(),
       ];
