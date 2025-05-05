@@ -73,7 +73,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           final isAvailable = book.availableCopies > 0;
           final description = book.description;
           final showMore = description.length > 120 && !_showFullDescription;
-          final displayedDescription = showMore ? description.substring(0, 120) + '...' : description;
+          final displayedDescription = showMore ? '${description.substring(0, 120)}...' : description;
 
           return CustomScrollView(
             slivers: [
@@ -194,10 +194,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       const SizedBox(height: 24),
                       const Divider(),
                       const SizedBox(height: 8),
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Reviews', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                          Text('Reviews', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
                           // OutlinedButton(
                           //   onPressed: () {},
                           //   style: OutlinedButton.styleFrom(
