@@ -92,21 +92,36 @@ class _SignupScreenState extends State<SignupScreen> {
     final DateTime? picked = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Pilih Tahun Masuk"),
-          content: SizedBox(
-            width: 300,
-            height: 300,
-            child: YearPicker(
-              firstDate: DateTime(2010),
-              lastDate: DateTime.now(),
-              initialDate: DateTime.now(),
-              selectedDate: _yearController.text.isNotEmpty
-                  ? DateTime(int.parse(_yearController.text))
-                  : DateTime.now(),
-              onChanged: (DateTime dateTime) {
-                Navigator.pop(context, dateTime);
-              },
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              surface: Colors.white,
+              background: Colors.white,
+              primary: Colors.black,
+              onSurface: Colors.black,
+            ),
+            dialogBackgroundColor: Colors.white,
+            dialogTheme: const DialogTheme(
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+            ),
+          ),
+          child: AlertDialog(
+            title: const Text("Pilih Tahun Masuk"),
+            content: SizedBox(
+              width: 300,
+              height: 300,
+              child: YearPicker(
+                firstDate: DateTime(2010),
+                lastDate: DateTime.now(),
+                initialDate: DateTime.now(),
+                selectedDate: _yearController.text.isNotEmpty
+                    ? DateTime(int.parse(_yearController.text))
+                    : DateTime.now(),
+                onChanged: (DateTime dateTime) {
+                  Navigator.pop(context, dateTime);
+                },
+              ),
             ),
           ),
         );
@@ -227,14 +242,14 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: _navigateToLogin,
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
+      //     onPressed: _navigateToLogin,
+      //   ),
+      // ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -281,6 +296,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   // Form Card
                   Card(
+                    color: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),

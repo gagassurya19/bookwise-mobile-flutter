@@ -18,9 +18,6 @@ class Book {
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
-    print('=== Parsing Book ===');
-    print('Raw JSON: $json');
-    
     // Handle different API response formats
     final id = json['id']?.toString() ?? json['_id']?.toString() ?? '';
     final title = json['title']?.toString() ?? json['name']?.toString() ?? '';
@@ -37,15 +34,6 @@ class Book {
     final category = json['category']?.toString() ?? 
                     json['genre']?.toString() ?? 
                     json['type']?.toString() ?? '';
-    
-    print('Parsed values:');
-    print('- ID: $id');
-    print('- Title: $title');
-    print('- Author: $author');
-    print('- Cover URL: $coverUrl');
-    print('- Rating: $rating');
-    print('- Category: $category');
-
     return Book(
       id: id,
       title: title,

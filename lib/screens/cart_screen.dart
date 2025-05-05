@@ -75,6 +75,7 @@ class CartScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Checkout Details'),
           content: SingleChildScrollView(
             child: Column(
@@ -107,6 +108,24 @@ class CartScreen extends StatelessWidget {
                                 initialDate: selectedDateFrom,
                                 firstDate: DateTime.now(),
                                 lastDate: DateTime.now().add(const Duration(days: 365)),
+                                builder: (context, child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      datePickerTheme: const DatePickerThemeData(
+                                        backgroundColor: Colors.white,
+                                        surfaceTintColor: Colors.white,
+                                      ),
+                                      colorScheme: Theme.of(context).colorScheme.copyWith(
+                                        surface: Colors.white,
+                                        background: Colors.white,
+                                        primary: Colors.black,
+                                        onSurface: Colors.black,
+                                      ),
+                                      dialogBackgroundColor: Colors.white,
+                                    ),
+                                    child: child!,
+                                  );
+                                },
                               );
                               if (date != null) {
                                 setState(() {
@@ -123,6 +142,7 @@ class CartScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey.shade300),
                                 borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,6 +175,24 @@ class CartScreen extends StatelessWidget {
                                 initialDate: selectedDateTo,
                                 firstDate: selectedDateFrom,
                                 lastDate: DateTime.now().add(const Duration(days: 365)),
+                                builder: (context, child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      datePickerTheme: const DatePickerThemeData(
+                                        backgroundColor: Colors.white,
+                                        surfaceTintColor: Colors.white,
+                                      ),
+                                      colorScheme: Theme.of(context).colorScheme.copyWith(
+                                        surface: Colors.white,
+                                        background: Colors.white,
+                                        primary: Colors.black,
+                                        onSurface: Colors.black,
+                                      ),
+                                      dialogBackgroundColor: Colors.white,
+                                    ),
+                                    child: child!,
+                                  );
+                                },
                               );
                               if (date != null) {
                                 setState(() {
@@ -171,6 +209,7 @@ class CartScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey.shade300),
                                 borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,70 +246,76 @@ class CartScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
                   ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedPaymentMethod,
-                      isExpanded: true,
-                      hint: const Text('Select payment method'),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Bank Transfer',
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.account_balance),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  'Bank Transfer',
-                                  overflow: TextOverflow.ellipsis,
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      canvasColor: Colors.white,
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedPaymentMethod,
+                        isExpanded: true,
+                        hint: const Text('Select payment method'),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'Bank Transfer',
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.account_balance),
+                                SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    'Bank Transfer',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Credit Card',
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.credit_card),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  'Credit Card',
-                                  overflow: TextOverflow.ellipsis,
+                          DropdownMenuItem(
+                            value: 'Credit Card',
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.credit_card),
+                                SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    'Credit Card',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'E-Wallet',
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.payment),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  'E-Wallet',
-                                  overflow: TextOverflow.ellipsis,
+                          DropdownMenuItem(
+                            value: 'E-Wallet',
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.payment),
+                                SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    'E-Wallet',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            selectedPaymentMethod = value;
-                            cartProvider.setPaymentMethod(value);
-                          });
-                        }
-                      },
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              selectedPaymentMethod = value;
+                              cartProvider.setPaymentMethod(value);
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -317,6 +362,7 @@ class CartScreen extends StatelessWidget {
                 FocusScope.of(context).unfocus();
                 Navigator.pop(dialogContext);
               },
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
@@ -412,6 +458,10 @@ class CartScreen extends StatelessWidget {
                   );
                 }
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
               child: const Text('Checkout'),
             ),
           ],
@@ -423,7 +473,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Cart',
@@ -451,66 +501,71 @@ class CartScreen extends StatelessWidget {
           return Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: cart.items.length,
-                  itemBuilder: (context, index) {
-                    final item = cart.items[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            item.image,
-                            width: 60,
-                            height: 90,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: 60,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  color: Colors.white,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: cart.items.length,
+                    itemBuilder: (context, index) {
+                      final item = cart.items[index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        color: Colors.white,
+                        child: ListTile(
+                          tileColor: Colors.white,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              item.image,
+                              width: 60,
+                              height: 90,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 60,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(Icons.image_not_supported),
+                                );
+                              },
+                            ),
+                          ),
+                          title: Text(
+                            item.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(item.author),
+                              Text(
+                                'Late Fee: Rp${item.lateFee.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: const Icon(Icons.image_not_supported),
-                              );
-                            },
+                              ),
+                              Text(
+                                'Borrow Period: ${item.dateFrom.toString().split(' ')[0]} to ${item.dateTo.toString().split(' ')[0]}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () => cart.removeItem(item.id),
                           ),
                         ),
-                        title: Text(
-                          item.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(item.author),
-                            Text(
-                              'Late Fee: \$${item.lateFee.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'Borrow Period: ${item.dateFrom.toString().split(' ')[0]} to ${item.dateTo.toString().split(' ')[0]}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline),
-                          onPressed: () => cart.removeItem(item.id),
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -539,7 +594,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '\$${cart.totalFee.toStringAsFixed(2)}',
+                          'Rp${cart.totalFee.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

@@ -39,12 +39,9 @@ class BookService {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => Book.fromJson(json)).toList();
       } else {
-        print('Error response: ${response.statusCode}');
-        print('Response body: ${response.body}');
         throw Exception('Failed to load books: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching books: $e');
       throw Exception('Failed to load books: $e');
     }
   }
@@ -63,12 +60,9 @@ class BookService {
         final Map<String, dynamic> jsonData = json.decode(response.body);
         return BookDetail.fromJson(jsonData);
       } else {
-        print('Error response: ${response.statusCode}');
-        print('Response body: ${response.body}');
         throw Exception('Failed to load book details: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching book details: $e');
       throw Exception('Failed to load book details: $e');
     }
   }
